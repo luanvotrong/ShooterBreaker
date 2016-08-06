@@ -26,7 +26,7 @@ public class Ball : MonoBehaviour {
 			m_rigidBody.position = m_initialPos;
 			break;
 		case STATE.FLYING:
-			m_angle = Random.Range(25, 155) * Mathf.Deg2Rad;
+			m_angle = Random.Range(25, 155);
 			break;
 		}
 	}
@@ -60,15 +60,33 @@ public class Ball : MonoBehaviour {
 		case STATE.FLYING:
 			Vector2 pos = m_rigidBody.position;
 			Vector2 size = m_collider.size;
-			if (pos.x - size.x/2 <= m_screenRect.x - m_screenRect.width/2
-			    || pos.x + size.x/2 >= m_screenRect.x + m_screenRect.width/2) 
+			if(Mathf.Abs(m_angle) > 90)
 			{
-				m_angle = 180 - m_angle;
+				if(pos.x - size.x/2 <= m_screenRect.x - m_screenRect.width/2)
+				{
+					m_angle = -180 - m_angle;
+				}
 			}
-			else if (pos.y - size.y/2 <= m_screenRect.y - m_screenRect.height/2 
-			         || pos.y + size.y/2 >= m_screenRect.y + m_screenRect.height/2) 
+			else if(Mathf.Abs(m_angle) < 90)
 			{
-				m_angle = -m_angle;
+				if (pos.x + size.x/2 >= m_screenRect.x + m_screenRect.width/2) 
+				{
+					m_angle = -180 - m_angle;
+				}
+			}
+			if(m_angle > 0)
+			{
+				if(pos.y + size.y/2 >= m_screenRect.y + m_screenRect.height/2)
+				{
+					m_angle = -m_angle;
+				}
+			}
+			else if(m_angle < 0)
+			{
+				if (pos.y - size.y/2 <= m_screenRect.y - m_screenRect.height/2) 
+				{
+					m_angle = -m_angle;
+				}
 			}
 			
 			if(m_angle > 180)
