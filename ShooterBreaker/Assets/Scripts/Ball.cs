@@ -60,13 +60,10 @@ public class Ball : MonoBehaviour {
 		case STATE.FLYING:
 			Vector2 pos = m_rigidBody.position;
 			Vector2 size = m_collider.size;
-			if (pos.x - size.x/2 <= m_screenRect.x - m_screenRect.width/2) 
+			if (pos.x - size.x/2 <= m_screenRect.x - m_screenRect.width/2
+			    || pos.x + size.x/2 >= m_screenRect.x + m_screenRect.width/2) 
 			{
 				m_angle = 180 - m_angle;
-			}
-			else if(pos.x + size.x/2 >= m_screenRect.x + m_screenRect.width/2)
-			{
-				m_angle = -180 + m_angle;
 			}
 			else if (pos.y - size.y/2 <= m_screenRect.y - m_screenRect.height/2 
 			         || pos.y + size.y/2 >= m_screenRect.y + m_screenRect.height/2) 
