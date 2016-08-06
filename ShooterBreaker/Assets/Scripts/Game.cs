@@ -10,8 +10,6 @@ public class Game : MonoBehaviour {
 	Ball m_scriptBall;
 	BoxCollider2D m_colliderBall;
 
-	float m_force = 500;
-
 	// Use this for initialization
 	void Start () {
 		m_scriptBar = m_objectBar.GetComponent<Bar> ();
