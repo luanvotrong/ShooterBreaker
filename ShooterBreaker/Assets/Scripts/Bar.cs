@@ -10,6 +10,7 @@ public class Bar : MonoBehaviour {
 	STATE m_state;
 	public Vector2 m_initialPos;
 	Rigidbody2D m_rigidBody;
+	Vector3 m_touchPos;
 
 	public STATE GetState() {
 		return m_state;
@@ -24,8 +25,10 @@ public class Bar : MonoBehaviour {
 			m_rigidBody.position = m_initialPos;
 			break;
 		case STATE.RELEASED:
+			m_touchPos = Vector3.zero;
 			break;
 		case STATE.TOUCHED:
+			m_touchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 			break;
 		}
 	}
@@ -42,7 +45,24 @@ public class Bar : MonoBehaviour {
 	void FixedUpdate(){
 	}
 
+	void OnMouseDown()
+	{
+		SetState (STATE.TOUCHED);
+	}
+
 	void OnMouseDrag()
 	{
+		if (m_state == STATE.TOUCHED) {
+			Vector3 dist = Camera.main.ScreenToWorldPoint(Input.mousePosition) - m_touchPos;
+			Vector3 newPos = m_rigidBody.position;
+			newPos.x += dist.x;
+			m_rigidBody.MovePosition(newPos);
+			m_touchPos += dist;
+		}
+	}
+
+	void OnMouseUp()
+	{
+		SetState (STATE.RELEASED);
 	}
 }
