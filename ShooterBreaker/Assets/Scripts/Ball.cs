@@ -101,6 +101,18 @@ public class Ball : MonoBehaviour {
 		}
 	}
 
+	void OnTriggerEnter2D(Collider2D col)
+	{
+		switch (m_state) {
+		case STATE.FLYING:
+			if(m_angle < 0)
+			{
+				m_angle = -m_angle;
+			}
+			break;
+		}
+	}
+
 	void OnMouseDown()
 	{
 		if (m_state == STATE.WAITING) {
