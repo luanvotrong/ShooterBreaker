@@ -11,6 +11,7 @@ public class Bar : MonoBehaviour {
 	public Vector2 m_initialPos;
 	Rigidbody2D m_rigidBody;
 	Vector3 m_touchPos;
+	Rect m_screenRect;
 
 	public STATE GetState() {
 		return m_state;

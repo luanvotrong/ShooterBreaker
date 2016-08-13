@@ -2,6 +2,9 @@
 using System.Collections;
 
 public class Game : MonoBehaviour {
+	Rect m_screenRect;
+	public GameObject m_prefabEnemy;
+
 	public GameObject m_objectBar;
 	Bar m_scriptBar;
 	BoxCollider2D m_colliderBar;
@@ -12,6 +15,10 @@ public class Game : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		m_screenRect.height = Camera.main.orthographicSize * 2;
+		m_screenRect.width = m_screenRect.height / Screen.height * Screen.width;
+		m_screenRect.position = Camera.main.GetComponent<Transform> ().position;
+
 		m_scriptBar = m_objectBar.GetComponent<Bar> ();
 		m_scriptBall = m_objectBall.GetComponent<Ball> ();
 
@@ -23,6 +30,20 @@ public class Game : MonoBehaviour {
 
 		m_scriptBar.SetState (Bar.STATE.WAITING);
 		m_scriptBall.SetState (Ball.STATE.WAITING);
+
+		//init enemies
+		Rect enemyRect = new Rect(m_screenRect);
+		enemyRect.x -= enemyRect.width / 2;
+		enemyRect.y += enemyRect.height/2;
+		enemyRect.height /= 4;
+		Vector2 enemySize = m_prefabEnemy.GetComponent<BoxCollider2D> ().size;
+		for (int x = 0; x < 8; x++) {
+			float posx = enemyRect.x + enemyRect.width / 9 * (x + 1);
+			for (int y = 0; y < 4; y++) {
+				float posy = enemyRect.y - enemyRect.height / 5 * y;
+				Instantiate (m_prefabEnemy, new Vector3 (posx + enemySize.x / 2, posy - enemySize.y, 0.0f), Quaternion.identity);
+			}
+		}
 	}
 
 	void FixedUpdate(){

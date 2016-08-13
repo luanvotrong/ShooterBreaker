@@ -105,9 +105,14 @@ public class Ball : MonoBehaviour {
 	{
 		switch (m_state) {
 		case STATE.FLYING:
-			if(m_angle < 0)
-			{
+			if (m_angle < 0) {
 				m_angle = -m_angle;
+			}
+
+			Vector2 pos = m_rigidBody.position;
+
+			if (col.gameObject.tag == "Enemy") {
+				Destroy (col.gameObject);
 			}
 			break;
 		}
