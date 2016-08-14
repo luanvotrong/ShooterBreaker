@@ -44,8 +44,19 @@ public class Game : MonoBehaviour {
 				Instantiate (m_prefabEnemy, new Vector3 (posx + enemySize.x / 2, posy - enemySize.y, 0.0f), Quaternion.identity);
 			}
 		}
+
+		//Init Camera edge collider
+		EdgeCollider2D edgeCollider = Camera.main.GetComponent<EdgeCollider2D> ();
+		Vector2[] points = new Vector2[5];
+		points [0] = new Vector2 (m_screenRect.x - m_screenRect.width/2, 0 - m_screenRect.height/2);
+		points [1] = new Vector2 (m_screenRect.x - m_screenRect.width/2, 0 + m_screenRect.height/2);
+		points [2] = new Vector2 (m_screenRect.x + m_screenRect.width/2, 0 + m_screenRect.height/2);
+		points [3] = new Vector2 (m_screenRect.x + m_screenRect.width/2, 0 - m_screenRect.height/2);
+		points [4] = new Vector2 (m_screenRect.x - m_screenRect.width/2, 0 - m_screenRect.height/2);
+		edgeCollider.points = points;
 	}
 
+	// Update is called each fixed deltaTime
 	void FixedUpdate(){
 
 	}

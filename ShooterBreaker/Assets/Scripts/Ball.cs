@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class Ball : MonoBehaviour {
@@ -26,7 +26,11 @@ public class Ball : MonoBehaviour {
 			m_rigidBody.position = m_initialPos;
 			break;
 		case STATE.FLYING:
-			m_angle = Random.Range(25, 155);
+			m_angle = 90;
+			float rad = m_angle * Mathf.Deg2Rad;
+			Vector2 vec = new Vector2 (Mathf.Cos (rad), Mathf.Sin (rad));
+			vec *= m_force;
+			m_rigidBody.AddForce (vec, ForceMode2D.Impulse);
 			break;
 		}
 	}
@@ -46,10 +50,6 @@ public class Ball : MonoBehaviour {
 		switch(m_state)
 		{
 		case STATE.FLYING:
-			float rad = m_angle * Mathf.Deg2Rad;
-			Vector2 vec = new Vector2 (Mathf.Cos(rad), Mathf.Sin(rad));
-			vec *= m_force * Time.deltaTime;
-			m_rigidBody.position += vec;
 			break;
 		}
 	}
@@ -58,59 +58,14 @@ public class Ball : MonoBehaviour {
 	void Update () {
 		switch (m_state) {
 		case STATE.FLYING:
-			Vector2 pos = m_rigidBody.position;
-			Vector2 size = m_collider.size;
-			if(Mathf.Abs(m_angle) > 90)
-			{
-				if(pos.x - size.x/2 <= m_screenRect.x - m_screenRect.width/2)
-				{
-					m_angle = -180 - m_angle;
-				}
-			}
-			else if(Mathf.Abs(m_angle) < 90)
-			{
-				if (pos.x + size.x/2 >= m_screenRect.x + m_screenRect.width/2) 
-				{
-					m_angle = -180 - m_angle;
-				}
-			}
-			if(m_angle > 0)
-			{
-				if(pos.y + size.y/2 >= m_screenRect.y + m_screenRect.height/2)
-				{
-					m_angle = -m_angle;
-				}
-			}
-			else if(m_angle < 0)
-			{
-				if (pos.y - size.y/2 <= m_screenRect.y - m_screenRect.height/2) 
-				{
-					m_angle = -m_angle;
-				}
-			}
-			
-			if(m_angle > 180)
-			{
-				m_angle = 360 - m_angle;
-			}
-			else if(m_angle < -180)
-			{
-				m_angle = 360 + m_angle;
-			}
 			break;
 		}
 	}
 
-	void OnTriggerEnter2D(Collider2D col)
+	void OnCollisionEnter2D(Collision2D col)
 	{
 		switch (m_state) {
 		case STATE.FLYING:
-			if (m_angle < 0) {
-				m_angle = -m_angle;
-			}
-
-			Vector2 pos = m_rigidBody.position;
-
 			if (col.gameObject.tag == "Enemy") {
 				Destroy (col.gameObject);
 			}
