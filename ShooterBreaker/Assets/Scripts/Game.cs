@@ -26,7 +26,7 @@ public class Game : MonoBehaviour {
 		m_colliderBall = m_scriptBall.GetComponent<BoxCollider2D> ();
 
 		m_scriptBar.m_initialPos = new Vector2(0.0f, 0.0f);
-		m_scriptBall.m_initialPos = new Vector2 (0.0f, (m_colliderBar.size.y + m_colliderBall.size.y) / 2);
+		//m_scriptBall.m_initialPos = new Vector2 (0.0f, (m_colliderBar.size.y + m_colliderBall.size.y) / 2);
 
 		m_scriptBar.SetState (Bar.STATE.WAITING);
 		m_scriptBall.SetState (Ball.STATE.WAITING);

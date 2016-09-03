@@ -10,8 +10,10 @@ public class Bar : MonoBehaviour {
 	STATE m_state;
 	public Vector2 m_initialPos;
 	Rigidbody2D m_rigidBody;
+	SpringJoint2D m_springJoint;
 	Vector3 m_touchPos;
 	Rect m_screenRect;
+	public GameObject[] m_rope;
 
 	public STATE GetState() {
 		return m_state;
@@ -37,6 +39,8 @@ public class Bar : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		m_rigidBody = GetComponent<Rigidbody2D> ();
+		m_springJoint = GetComponent<SpringJoint2D> ();
+		m_springJoint.anchor = new Vector2 (200, m_springJoint.anchor.y);
 	}
 
 	// Update is called once per frame
