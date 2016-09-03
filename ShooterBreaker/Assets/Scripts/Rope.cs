@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Bar : MonoBehaviour {
+public class Rope : MonoBehaviour {
+
 	public enum STATE {
 		WAITING = 0,
 		RELEASED,
@@ -11,19 +12,18 @@ public class Bar : MonoBehaviour {
 	public Vector2 m_initialPos;
 	Rigidbody2D m_rigidBody;
 	Vector3 m_touchPos;
-	Rect m_screenRect;
 
 	public STATE GetState() {
 		return m_state;
 	}
-	
+
 	public void SetState(STATE state)
 	{
 		m_state = state;
 
 		switch (m_state) {
 		case STATE.WAITING:
-			//m_rigidBody.position = m_initialPos;
+			m_rigidBody.position = m_initialPos;
 			break;
 		case STATE.RELEASED:
 			m_touchPos = Vector3.zero;
@@ -38,12 +38,10 @@ public class Bar : MonoBehaviour {
 	void Start () {
 		m_rigidBody = GetComponent<Rigidbody2D> ();
 	}
-
+	
 	// Update is called once per frame
 	void Update () {
-	}
-
-	void FixedUpdate(){
+	
 	}
 
 	void OnMouseDown()
@@ -57,6 +55,7 @@ public class Bar : MonoBehaviour {
 			Vector3 dist = Camera.main.ScreenToWorldPoint(Input.mousePosition) - m_touchPos;
 			Vector3 newPos = m_rigidBody.position;
 			newPos.x += dist.x;
+			newPos.y += dist.y;
 			m_rigidBody.MovePosition(newPos);
 			m_touchPos += dist;
 		}
