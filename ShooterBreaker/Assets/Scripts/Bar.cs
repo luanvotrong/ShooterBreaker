@@ -32,7 +32,7 @@ public class Bar : MonoBehaviour {
 			Vector2 pos = m_rigidBody.position;
 			pos.x -= box.size.x / 2;
 			//8 hardcoded
-			const int NumOfSegments = 7;
+			const int NumOfSegments = 6;
 			for (int i = 0; i < NumOfSegments; i++) {
 				GameObject rope = Instantiate (m_prefabRope);
 				Rigidbody2D body = rope.GetComponent<Rigidbody2D> ();
@@ -43,15 +43,16 @@ public class Bar : MonoBehaviour {
 				body.position = pos;
 				pos.x += size.x / 2;
 
+				rope.SetActive (true);
 				m_objectRopes.Add (rope);
 			}
 
-			const float springLength = 1;
-			const float dampRatio = 0.8f;
+			const float springLength = 0.005f;
+			const float dampRatio = 1f;
+			const float frequency = 3;
 			//Init spring
 			for (int i = 0; i < m_objectRopes.Count; i++) {
 				GameObject rope = m_objectRopes [i];
-				Rigidbody2D body = rope.GetComponent<Rigidbody2D> ();
 				Vector2 size = rope.GetComponent<BoxCollider2D> ().size;
 				//head
 				if (i == 0) {
@@ -64,6 +65,7 @@ public class Bar : MonoBehaviour {
 					head.anchor = new Vector2 (-size.x / 2, 0.0f);
 					head.distance = springLength;
 					head.dampingRatio = dampRatio;
+					head.frequency = frequency;
 					//tail spring
 					SpringJoint2D tail = spring[1];
 					tail.connectedBody = m_objectRopes [1].GetComponent<Rigidbody2D> ();
@@ -71,6 +73,7 @@ public class Bar : MonoBehaviour {
 					tail.anchor = new Vector2 (size.x / 2, 0.0f);
 					tail.distance = springLength;
 					tail.dampingRatio = dampRatio;
+					tail.frequency = frequency;
 				}
 				//tail
 				else if (i == m_objectRopes.Count - 1) {
@@ -80,6 +83,7 @@ public class Bar : MonoBehaviour {
 					spring.anchor = new Vector2 (size.x / 2, 0.0f);
 					spring.distance = springLength;
 					spring.dampingRatio = dampRatio;
+					spring.frequency = frequency;
 				}
 				//body
 				else {
@@ -89,6 +93,7 @@ public class Bar : MonoBehaviour {
 					spring.anchor = new Vector2 (size.x / 2, 0.0f);
 					spring.distance = springLength;
 					spring.dampingRatio = dampRatio;
+					spring.frequency = frequency;
 				}
 			}
 			break;
