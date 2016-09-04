@@ -32,7 +32,7 @@ public class Bar : MonoBehaviour {
 			Vector2 pos = m_rigidBody.position;
 			pos.x -= box.size.x / 2;
 			//8 hardcoded
-			const int NumOfSegments = 8;
+			const int NumOfSegments = 7;
 			for (int i = 0; i < NumOfSegments; i++) {
 				GameObject rope = Instantiate (m_prefabRope);
 				Rigidbody2D body = rope.GetComponent<Rigidbody2D> ();
@@ -47,6 +47,7 @@ public class Bar : MonoBehaviour {
 			}
 
 			const float springLength = 1;
+			const float dampRatio = 0.8f;
 			//Init spring
 			for (int i = 0; i < m_objectRopes.Count; i++) {
 				GameObject rope = m_objectRopes [i];
@@ -62,12 +63,14 @@ public class Bar : MonoBehaviour {
 					head.connectedAnchor = new Vector2 (-box.size.x / 2, 0.0f);
 					head.anchor = new Vector2 (-size.x / 2, 0.0f);
 					head.distance = springLength;
+					head.dampingRatio = dampRatio;
 					//tail spring
 					SpringJoint2D tail = spring[1];
 					tail.connectedBody = m_objectRopes [1].GetComponent<Rigidbody2D> ();
 					tail.connectedAnchor = new Vector2 (-size.x / 2, 0.0f);
 					tail.anchor = new Vector2 (size.x / 2, 0.0f);
 					tail.distance = springLength;
+					tail.dampingRatio = dampRatio;
 				}
 				//tail
 				else if (i == m_objectRopes.Count - 1) {
@@ -76,14 +79,16 @@ public class Bar : MonoBehaviour {
 					spring.connectedAnchor = new Vector2 (box.size.x / 2, 0.0f);
 					spring.anchor = new Vector2 (size.x / 2, 0.0f);
 					spring.distance = springLength;
+					spring.dampingRatio = dampRatio;
 				}
 				//body
 				else {
 					SpringJoint2D spring = rope.GetComponent<SpringJoint2D> ();
 					spring.connectedBody = m_objectRopes [i + 1].GetComponent<Rigidbody2D> ();
-					spring.connectedAnchor = new Vector2 (size.x / 2, 0.0f);
-					spring.anchor = new Vector2 (-size.x / 2, 0.0f);
+					spring.connectedAnchor = new Vector2 (-size.x / 2, 0.0f);
+					spring.anchor = new Vector2 (size.x / 2, 0.0f);
 					spring.distance = springLength;
+					spring.dampingRatio = dampRatio;
 				}
 			}
 			break;
