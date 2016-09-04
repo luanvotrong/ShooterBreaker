@@ -27,25 +27,63 @@ public class Bar : MonoBehaviour {
 
 		switch (m_state) {
 		case STATE.WAITING:
-			{
-				m_rigidBody.position = m_initialPos;
-				BoxCollider2D box = GetComponent<BoxCollider2D> ();
-				Vector2 pos = m_rigidBody.position;
-				pos.x -= box.size.x / 2;
-				//8 hardcoded
-				for (int i = 0; i < 8; i++) {
-					GameObject rope = Instantiate (m_prefabRope);
-					Rigidbody2D body = rope.GetComponent<Rigidbody2D> ();
-					Vector2 size = rope.GetComponent<BoxCollider2D> ().size;
-					Physics2D.IgnoreCollision (rope.GetComponent<BoxCollider2D> (), GetComponent<BoxCollider2D> ());
+			m_rigidBody.position = m_initialPos;
+			BoxCollider2D box = GetComponent<BoxCollider2D> ();
+			Vector2 pos = m_rigidBody.position;
+			pos.x -= box.size.x / 2;
+			//8 hardcoded
+			const int NumOfSegments = 8;
+			for (int i = 0; i < NumOfSegments; i++) {
+				GameObject rope = Instantiate (m_prefabRope);
+				Rigidbody2D body = rope.GetComponent<Rigidbody2D> ();
+				Vector2 size = rope.GetComponent<BoxCollider2D> ().size;
+				Physics2D.IgnoreCollision (rope.GetComponent<BoxCollider2D> (), GetComponent<BoxCollider2D> ());
 
+				pos.x += size.x / 2;
+				body.position = pos;
+				pos.x += size.x / 2;
 
+				m_objectRopes.Add (rope);
+			}
 
-					pos.x += size.x / 2;
-					body.position = pos;
-					pos.x += size.x / 2;
-
-					m_objectRopes.Add (rope);
+			const float springLength = 1;
+			//Init spring
+			for (int i = 0; i < m_objectRopes.Count; i++) {
+				GameObject rope = m_objectRopes [i];
+				Rigidbody2D body = rope.GetComponent<Rigidbody2D> ();
+				Vector2 size = rope.GetComponent<BoxCollider2D> ().size;
+				//head
+				if (i == 0) {
+					rope.AddComponent<SpringJoint2D> ();
+					SpringJoint2D[] spring = rope.GetComponents<SpringJoint2D> ();
+					//head spring
+					SpringJoint2D head = spring[0];
+					head.connectedBody = this.GetComponent<Rigidbody2D> ();
+					head.connectedAnchor = new Vector2 (-box.size.x / 2, 0.0f);
+					head.anchor = new Vector2 (-size.x / 2, 0.0f);
+					head.distance = springLength;
+					//tail spring
+					SpringJoint2D tail = spring[1];
+					tail.connectedBody = m_objectRopes [1].GetComponent<Rigidbody2D> ();
+					tail.connectedAnchor = new Vector2 (-size.x / 2, 0.0f);
+					tail.anchor = new Vector2 (size.x / 2, 0.0f);
+					tail.distance = springLength;
+				}
+				//tail
+				else if (i == m_objectRopes.Count - 1) {
+					SpringJoint2D spring = rope.GetComponent<SpringJoint2D> ();
+					spring.connectedBody = this.GetComponent<Rigidbody2D> ();
+					spring.connectedAnchor = new Vector2 (box.size.x / 2, 0.0f);
+					spring.anchor = new Vector2 (size.x / 2, 0.0f);
+					spring.distance = springLength;
+				}
+				//body
+				else {
+					SpringJoint2D spring = rope.GetComponent<SpringJoint2D> ();
+					spring.connectedBody = m_objectRopes [i + 1].GetComponent<Rigidbody2D> ();
+					spring.connectedAnchor = new Vector2 (size.x / 2, 0.0f);
+					spring.anchor = new Vector2 (-size.x / 2, 0.0f);
+					spring.distance = springLength;
 				}
 			}
 			break;
