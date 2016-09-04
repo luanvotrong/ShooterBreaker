@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Bar : MonoBehaviour {
 	public enum STATE {
@@ -13,6 +14,9 @@ public class Bar : MonoBehaviour {
 	Vector3 m_touchPos;
 	Rect m_screenRect;
 
+	public GameObject m_prefabRope;
+	List<GameObject> m_objectRopes = new List<GameObject> ();
+
 	public STATE GetState() {
 		return m_state;
 	}
@@ -23,7 +27,27 @@ public class Bar : MonoBehaviour {
 
 		switch (m_state) {
 		case STATE.WAITING:
-			m_rigidBody.position = m_initialPos;
+			{
+				m_rigidBody.position = m_initialPos;
+				BoxCollider2D box = GetComponent<BoxCollider2D> ();
+				Vector2 pos = m_rigidBody.position;
+				pos.x -= box.size.x / 2;
+				//8 hardcoded
+				for (int i = 0; i < 8; i++) {
+					GameObject rope = Instantiate (m_prefabRope);
+					Rigidbody2D body = rope.GetComponent<Rigidbody2D> ();
+					Vector2 size = rope.GetComponent<BoxCollider2D> ().size;
+					Physics2D.IgnoreCollision (rope.GetComponent<BoxCollider2D> (), GetComponent<BoxCollider2D> ());
+
+
+
+					pos.x += size.x / 2;
+					body.position = pos;
+					pos.x += size.x / 2;
+
+					m_objectRopes.Add (rope);
+				}
+			}
 			break;
 		case STATE.RELEASED:
 			m_touchPos = Vector3.zero;
