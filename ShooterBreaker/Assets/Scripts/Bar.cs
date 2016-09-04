@@ -23,7 +23,7 @@ public class Bar : MonoBehaviour {
 
 		switch (m_state) {
 		case STATE.WAITING:
-			//m_rigidBody.position = m_initialPos;
+			m_rigidBody.position = m_initialPos;
 			break;
 		case STATE.RELEASED:
 			m_touchPos = Vector3.zero;
